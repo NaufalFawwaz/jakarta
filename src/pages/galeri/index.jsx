@@ -1,35 +1,58 @@
-import React, { useState } from 'react'
-import galeriImages from '@/utils/data/galeri'
+import React, { useState } from 'react';
+import galeriImages from '@/utils/data/galeri';
+import { X } from 'lucide-react';
 
 export default function Galeri() {
-  const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedImage, setSelectedImage] = useState(null);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4">
-      <h1 className="text-3xl font-bold text-center mb-8">Galeri</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-cyan-100 py-12 px-6">
+      <h1 className="text-4xl font-bold text-center text-blue-800 mb-12">
+        Galeri
+      </h1>
 
       <div className="columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4">
         {galeriImages.map((img) => (
-          <img
+          <div
             key={img.id}
-            src={img.url}
-            alt={img.alt}
-            className="w-full rounded-lg cursor-pointer hover:opacity-90 transition"
-            onClick={() => setSelectedImage(img.url)}
-          />
+            className="overflow-hidden rounded-xl shadow-lg cursor-pointer hover:scale-105 transition-transform duration-300"
+            onClick={() => setSelectedImage(img)}
+          >
+            <img
+              src={img.url}
+              alt={img.alt}
+              className="w-full object-cover rounded-lg"
+            />
+          </div>
         ))}
       </div>
 
       {selectedImage && (
         <div
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="max-w-3xl max-h-[90vh] overflow-auto">
-            <img src={selectedImage} alt="Preview" className="rounded-lg shadow-lg" />
+          <div
+            className="relative bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="absolute top-2 right-2 bg-white rounded-full cursor-pointer p-2 shadow hover:bg-gray-100"
+              onClick={() => setSelectedImage(null)}
+            >
+              <X className="w-5 h-5 text-gray-700" />
+            </button>
+            <img
+              src={selectedImage.url}
+              alt={selectedImage.alt}
+              className="w-full object-contain rounded-lg"
+            />
+            <div className="p-4 text-center text-gray-600 text-sm">
+              {selectedImage.alt}
+            </div>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
