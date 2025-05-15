@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { auth, db } from "@/firebase/init";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  collection,
+  getDocs,
+} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { news } from "@/utils/data/news";
 import { useRouter } from "next/router";
-import { bandLogos } from "../../assets";
 
 const CustomDropdown = ({ selected, onChange, options }) => {
   const [open, setOpen] = useState(false);
@@ -22,14 +27,14 @@ const CustomDropdown = ({ selected, onChange, options }) => {
         <ul className="absolute z-10 mt-1 w-40 bg-white border border-gray-300 rounded shadow-md">
           {options.map((option) => (
             <li
-              key={option}
+              key={option.id}
               onClick={() => {
-                onChange(option);
+                onChange(option.id);
                 setOpen(false);
               }}
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
             >
-              {option}
+              {option.nama}
             </li>
           ))}
         </ul>
@@ -45,19 +50,59 @@ const Mypage = () => {
     birthdate: "",
   });
   const [loading, setLoading] = useState(true);
+  const [selectedBand, setSelectedBand] = useState("");
+  const [bandOptions, setBandOptions] = useState([]);
+  const [bandDetails, setBandDetails] = useState({ nama: "", foto: "" });
+
   const router = useRouter();
 
-  const [selectedBand, setSelectedBand] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("selectedBand") || "Hindia";
-    }
-    return "Hindia";
-  });
+  const fetchBandOptions = async () => {
+    const bandRef = collection(db, "band");
+    const snapshot = await getDocs(bandRef);
+    const bands = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setBandOptions(bands);
+  };
 
+  const fetchBandDetail = async (bandId) => {
+    if (!bandId) return;
+    try {
+      const bandDoc = await getDoc(doc(db, "band", bandId));
+      if (bandDoc.exists()) {
+        setBandDetails(bandDoc.data());
+      }
+    } catch (error) {
+      console.error("Gagal memuat data band:", error);
+    }
+  };
+
+  const updateUserBand = async (bandId) => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        band: bandId,
+      });
+      console.log("Band preference updated in Firestore");
+    } catch (error) {
+      console.error("Gagal memperbarui band user:", error);
+    }
+  };
+
+  const handleBandChange = (bandId) => {
+    setSelectedBand(bandId);
+    localStorage.setItem("selectedBand", bandId);
+    updateUserBand(bandId);
+    fetchBandDetail(bandId);
+  };
 
   useEffect(() => {
-    localStorage.setItem("selectedBand", selectedBand);
-  }, [selectedBand]);
+    fetchBandOptions();
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -84,6 +129,13 @@ const Mypage = () => {
               location: data.location || "",
               birthdate: formattedDate || "",
             });
+
+            const savedBandId = data.band || localStorage.getItem("selectedBand") || "";
+
+            if (savedBandId) {
+              setSelectedBand(savedBandId);
+              fetchBandDetail(savedBandId);
+            }
           }
         } catch (error) {
           console.error("Gagal memuat data user:", error);
@@ -107,6 +159,7 @@ const Mypage = () => {
   return (
     <div className="w-full pt-4 relative">
       <div className="flex pt-6 pr-3">
+        {/* NEWS CARD */}
         <div className="w-1/3 p-4 border-blue-400 border-2 rounded-t mr-4 ml-4 pt-5">
           <div className="bg-blue-400 -mt-5 -ml-4 -mr-4 pt-2 pb-2 pl-4 pr-4 rounded-t">
             <h3 className="font-bold text-center">News</h3>
@@ -134,18 +187,19 @@ const Mypage = () => {
           </div>
         </div>
 
+        {/* USER INFO CARD */}
         <div className="w-2/3 p-8 gap-8 border-2 border-sky-400 rounded-xl flex">
           <div className="flex flex-col items-center mr-6">
             <img
-              src={bandLogos[selectedBand] || "/user-placeholder.png"}
-              alt={`Logo ${selectedBand}`}
+              src={bandDetails.foto || "/user-placeholder.png"}
+              alt={`Logo ${bandDetails.nama}`}
               className="w-32 h-32 object-contain border-2 border-gray-300 mb-2"
             />
             Tertarik pada:&nbsp;
             <CustomDropdown
-              selected={selectedBand}
-              onChange={setSelectedBand}
-              options={Object.keys(bandLogos)}
+              selected={bandDetails.nama || "Pilih Band"}
+              onChange={handleBandChange}
+              options={bandOptions}
             />
           </div>
           <div>
