@@ -12,7 +12,6 @@ export default function RegisterPage() {
   const [location, setLocation] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const router = useRouter();
-  const [showPopup, setShowPopup] = useState(false);
 
   const handleRegister = async () => {
     try {
@@ -33,12 +32,11 @@ export default function RegisterPage() {
     }
   };
 
-  const handleSelengkapnyaClick = () => setShowPopup(true);
-  const handleClosePopup = () => setShowPopup(false);
+  const handleSelengkapnyaClick = () => router.push("/news");
 
   return (
     <div className="w-full pt-4 relative">
-      <h2 className="text-center font-bold text-3xl bg-blue-500 p-3">Register</h2>
+      <h1 className="text-4xl font-extrabold text-center text-blue-800">Register</h1>
       <div className="flex pt-6 pr-3">
         <div className="w-1/3 p-4 border-blue-400 border-2 rounded-t mr-4 ml-4 pt-5">
           <div className="bg-blue-400 -mt-5 -ml-4 -mr-4 pt-2 pb-2 pl-4 pr-4 rounded-t">
@@ -122,22 +120,6 @@ export default function RegisterPage() {
           </button>
         </div>
       </div>
-
-      {showPopup && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-          <div className="bg-white p-8 rounded shadow-lg border border-gray-200 flex flex-col items-center justify-center">
-            <h3 className="text-lg font-semibold mb-4 text-center">
-              Anda perlu login atau register untuk melihat selengkapnya.
-            </h3>
-            <button
-              onClick={handleClosePopup}
-              className="bg-gray-300 hover:bg-gray-400 py-2 px-4 rounded"
-            >
-              OK
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

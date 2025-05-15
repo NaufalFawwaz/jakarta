@@ -19,7 +19,7 @@ export const news = [
   },
   {
     id: 3,
-    category: "Other",
+    category: "Concert",
     title: 'Pengumuman Mengenai Pre-Order Digital Photobook "CODE: JOURNAL" dengan bonus Video Call with SMG48',
     date: "6 Mei 2025",
     konten: "Photobook digital 'CODE: JOURNAL' menampilkan behind-the-scenes kegiatan member SMG48 selama 1 tahun terakhir. Berisi lebih dari 200 foto eksklusif, wawancara spesial, dan konten interaktif. Pre-order dibuka mulai 10 Mei dengan bonus video call 3 menit untuk 100 pembeli pertama. Edisi spesial termasuk video message dari member dan koleksi sticker digital.",
@@ -35,7 +35,7 @@ export const news = [
   },
   {
     id: 5,
-    category: "Music",
+    category: "Concert",
     title: "Rilis Single Baru 'Under the Spotlight' oleh SMG48",
     date: "15 Mei 2025",
     konten: "SMG48 akan merilis single ke-12 berjudul 'Under the Spotlight' pada 25 Mei 2025. Lagu ini bercerita tentang perjuangan member di bawah sorotan lampu panggung. Single ini akan tersedia di semua platform streaming musik dan disertai MV yang syuting di lokasi eksklusif. Pre-save sudah dibuka di Spotify dan Apple Music. Edisi fisik CD termasuk photocard random dan tiket voting untuk memilih center lagu berikutnya.",
@@ -43,7 +43,7 @@ export const news = [
   },
   {
     id: 6,
-    category: "Event",
+    category: "Concert",
     title: "Pertunjukan Spesial Ultah SMG48 ke-5 Tahun",
     date: "20 Mei 2025",
     konten: "Dalam rangka merayakan ulang tahun ke-5, SMG48 akan mengadakan konser spesial bertajuk '5 Years of Dreams' di SMG48 Theater pada 30 Mei. Acara ini menampilkan medley lagu-lagu hits sepanjang 5 tahun karier SMG48, pengumuman proyek spesial, dan pemilihan member terfavorit versi fans. Tiket bisa didapatkan melalui lottery system mulai 18 Mei. Khusus penonton offline akan mendapatkan goodie bag eksklusif.",

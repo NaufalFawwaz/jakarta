@@ -4,15 +4,18 @@ import { Calendar } from 'lucide-react';
 
 export default function NewsList() {
   const categoryColors = {
-    "Theater": "bg-gradient-to-r from-red-500 to-red-400",
-    "Other": "bg-gradient-to-r from-blue-500 to-blue-400",
-    "Comedy": "bg-gradient-to-r from-green-500 to-green-400",
-    "Music": "bg-gradient-to-r from-purple-500 to-purple-400",
-    "Event": "bg-gradient-to-r from-yellow-500 to-yellow-400 text-black"
+    // "Theater": "bg-gradient-to-r from-red-500 to-red-400",
+    // "Other": "bg-gradient-to-r from-blue-500 to-blue-400",
+    // "Comedy": "bg-gradient-to-r from-green-500 to-green-400",
+    // "Music": "bg-gradient-to-r from-purple-500 to-purple-400",
+    // "Event": "bg-gradient-to-r from-yellow-500 to-yellow-400 text-black"
+    "Comedy": "bg-gradient-to-r from-red-500 to-red-400",
+    "Concert": "bg-gradient-to-r from-blue-500 to-blue-400",
+    "Theater": "bg-gradient-to-r from-green-500 to-green-400",
   };
 
   return (
-    <div className="flex justify-center min-h-screen bg-gradient-to-br from-blue-100 to-cyan-100 py-12 px-4">
+    <div className="flex justify-center min-h-screen py-12 px-6">
       <div className="w-full max-w-4xl">
         <h1 className="text-4xl font-extrabold text-center text-blue-800 mb-10">
           News
@@ -34,9 +37,7 @@ export default function NewsList() {
                   <span>{item.date}</span>
                 </div>
               </div>
-
               <h2 className="text-xl font-bold text-blue-900 mb-2">{item.title}</h2>
-
               <p className="text-gray-700 text-sm line-clamp-2 leading-relaxed">{item.konten}</p>
             </Link>
           ))}
