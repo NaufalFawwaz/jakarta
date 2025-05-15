@@ -95,7 +95,6 @@ const Mypage = () => {
 
   const handleBandChange = (bandId) => {
     setSelectedBand(bandId);
-    localStorage.setItem("selectedBand", bandId);
     updateUserBand(bandId);
     fetchBandDetail(bandId);
   };
@@ -130,8 +129,7 @@ const Mypage = () => {
               birthdate: formattedDate || "",
             });
 
-            const savedBandId = data.band || localStorage.getItem("selectedBand") || "";
-
+            const savedBandId = data.band || "";
             if (savedBandId) {
               setSelectedBand(savedBandId);
               fetchBandDetail(savedBandId);
@@ -159,7 +157,6 @@ const Mypage = () => {
   return (
     <div className="w-full pt-4 relative">
       <div className="flex pt-6 pr-3">
-        {/* NEWS CARD */}
         <div className="w-1/3 p-4 border-blue-400 border-2 rounded-t mr-4 ml-4 pt-5">
           <div className="bg-blue-400 -mt-5 -ml-4 -mr-4 pt-2 pb-2 pl-4 pr-4 rounded-t">
             <h3 className="font-bold text-center">News</h3>
@@ -191,8 +188,8 @@ const Mypage = () => {
         <div className="w-2/3 p-8 gap-8 border-2 border-sky-400 rounded-xl flex">
           <div className="flex flex-col items-center mr-6">
             <img
-              src={bandDetails.foto || "/user-placeholder.png"}
-              alt={`Logo ${bandDetails.nama}`}
+              src={bandDetails.foto || "https://placehold.co/400"}
+              alt={`Logo ${bandDetails.nama || "Logo"}`}
               className="w-32 h-32 object-contain border-2 border-gray-300 mb-2"
             />
             Tertarik pada:&nbsp;

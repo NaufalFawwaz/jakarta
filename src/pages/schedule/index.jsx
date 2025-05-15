@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { kalender2025 } from '@/utils/data/kalender'
 
 const bulanList = [
@@ -64,14 +65,18 @@ export default function Kalender() {
             <div className="w-3/4 flex flex-col py-3 gap-2 pl-2">
               {item.events.length > 0 ? (
                 item.events.map((ev, i) => (
-                  <div key={i} className="flex items-center gap-2">
+                  <Link
+                    key={i}
+                    href={`/news/${ev.id}`}
+                    className="flex items-center gap-2 hover:bg-blue-100 px-2 py-1 rounded-md transition-all"
+                  >
                     <span className={`text-sm font-bold px-3 py-1 rounded-full ${kategoriStyle[ev.kategori.toLowerCase()] || "bg-gray-300"}`}>
                       {ev.kategori}
                     </span>
                     <span className="text-pink-500 font-semibold text-sm">
                       {ev.waktu} {ev.nama}
                     </span>
-                  </div>
+                  </Link>
                 ))
               ) : (
                 <span className="text-gray-400 italic text-sm">Tidak ada acara</span>

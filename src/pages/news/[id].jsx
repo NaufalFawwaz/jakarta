@@ -1,4 +1,3 @@
-// src/pages/news/[id].jsx
 import { useRouter } from 'next/router';
 import { news } from '@/utils/data/news';
 import Link from 'next/link';
@@ -14,11 +13,9 @@ export default function NewsDetail() {
   }
 
   const categoryColors = {
-    "Theater": "bg-red-500",
-    "Other": "bg-blue-500",
-    "Comedy": "bg-green-500",
-    "Music": "bg-purple-500",
-    "Event": "bg-yellow-500"
+    "Comedy": "bg-gradient-to-r from-red-500 to-red-400",
+    "Concert": "bg-gradient-to-r from-blue-500 to-blue-400",
+    "Theater": "bg-gradient-to-r from-green-500 to-green-400",
   };
 
   return (
