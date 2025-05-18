@@ -43,6 +43,32 @@ const CustomDropdown = ({ selected, onChange, options }) => {
   );
 };
 
+const ConfirmationModal = ({ onConfirm, onCancel }) => {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-b bg-opacity-40 z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+        <p className="mb-4 text-lg font-semibold">
+          Apakah Anda yakin ingin mengganti nama?
+        </p>
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={onConfirm}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Iya
+          </button>
+          <button
+            onClick={onCancel}
+            className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+          >
+            Tidak
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Mypage = () => {
   const [userData, setUserData] = useState({
     name: "",
@@ -53,6 +79,10 @@ const Mypage = () => {
   const [selectedBand, setSelectedBand] = useState("");
   const [bandOptions, setBandOptions] = useState([]);
   const [bandDetails, setBandDetails] = useState({ nama: "", foto: "" });
+
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState("");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const router = useRouter();
 
@@ -87,7 +117,6 @@ const Mypage = () => {
       await updateDoc(userRef, {
         band: bandId,
       });
-      console.log("Band preference updated in Firestore");
     } catch (error) {
       console.error("Gagal memperbarui band user:", error);
     }
@@ -97,6 +126,23 @@ const Mypage = () => {
     setSelectedBand(bandId);
     updateUserBand(bandId);
     fetchBandDetail(bandId);
+  };
+
+  const handleSaveName = async () => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        name: nameInput,
+      });
+      setUserData((prev) => ({ ...prev, name: nameInput }));
+      setIsEditingName(false);
+      setShowConfirmModal(false);
+    } catch (error) {
+      console.error("Gagal memperbarui nama:", error);
+    }
   };
 
   useEffect(() => {
@@ -129,6 +175,8 @@ const Mypage = () => {
               birthdate: formattedDate || "",
             });
 
+            setNameInput(data.name || "");
+
             const savedBandId = data.band || "";
             if (savedBandId) {
               setSelectedBand(savedBandId);
@@ -156,6 +204,13 @@ const Mypage = () => {
 
   return (
     <div className="w-full pt-4 relative">
+      {showConfirmModal && (
+        <ConfirmationModal
+          onConfirm={handleSaveName}
+          onCancel={() => setShowConfirmModal(false)}
+        />
+      )}
+
       <div className="flex pt-6 pr-3">
         <div className="w-1/3 p-4 border-blue-400 border-2 rounded-t mr-4 ml-4 pt-5">
           <div className="bg-blue-400 -mt-5 -ml-4 -mr-4 pt-2 pb-2 pl-4 pr-4 rounded-t">
@@ -184,7 +239,6 @@ const Mypage = () => {
           </div>
         </div>
 
-        {/* USER INFO CARD */}
         <div className="w-2/3 p-8 gap-8 border-2 border-sky-400 rounded-xl flex">
           <div className="flex flex-col items-center mr-6">
             <img
@@ -199,17 +253,63 @@ const Mypage = () => {
               options={bandOptions}
             />
           </div>
-          <div>
-            <p className="text-xl font-semibold mb-2">
-              <strong>Nama:</strong> {userData.name}
-            </p>
-            <p className="text-xl font-semibold mb-2">
-              <strong>Lokasi:</strong> {userData.location}
-            </p>
-            <p className="text-xl font-semibold">
-              <strong>Tanggal Lahir:</strong> {userData.birthdate}
-            </p>
+          <div className="flex-1">
+            <div className="mb-4">
+              <label className="block text-xl font-semibold mb-1">Nama:</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  className="border px-3 py-2 rounded text-base w-full"
+                  readOnly={!isEditingName}
+                  onClick={() => {
+                    if (!isEditingName) setIsEditingName(true);
+                  }}
+                />
+                {isEditingName && (
+                  <>
+                    <button
+                      onClick={() => setShowConfirmModal(true)}
+                      className="bg-green-500 text-white px-3 py-1 rounded text-sm"
+                    >
+                      Simpan
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsEditingName(false);
+                        setNameInput(userData.name);
+                      }}
+                      className="bg-gray-400 text-white px-3 py-1 rounded text-sm"
+                    >
+                      Batal
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-xl font-semibold mb-1">Lokasi:</label>
+              <input
+                type="text"
+                value={userData.location}
+                className="border px-3 py-2 rounded text-base w-full"
+                readOnly
+              />
+            </div>
+
+            <div>
+              <label className="block text-xl font-semibold mb-1">Tanggal Lahir:</label>
+              <input
+                type="text"
+                value={userData.birthdate}
+                className="border px-3 py-2 rounded text-base w-full"
+                readOnly
+              />
+            </div>
           </div>
+
         </div>
       </div>
     </div>
