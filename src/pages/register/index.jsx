@@ -11,6 +11,7 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [birthdate, setBirthdate] = useState("");
+  const [gender, setGender] = useState("");
   const router = useRouter();
 
   const handleRegister = async () => {
@@ -22,6 +23,7 @@ export default function RegisterPage() {
         name,
         location,
         birthdate,
+        gender,
         email: user.email,
         createdAt: new Date().toISOString()
       });
@@ -75,6 +77,7 @@ export default function RegisterPage() {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-xl font-bold mb-2">Lokasi</label>
             <input
@@ -84,6 +87,7 @@ export default function RegisterPage() {
               onChange={(e) => setLocation(e.target.value)}
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-xl font-bold mb-2">Tanggal Lahir</label>
             <input
@@ -92,6 +96,20 @@ export default function RegisterPage() {
               onChange={(e) => setBirthdate(e.target.value)}
             />
           </div>
+
+          <div className="mb-4">
+            <label className="block text-xl font-bold mb-2">Jenis Kelamin</label>
+            <select
+              className="w-full p-3 border-2 border-blue-400 rounded-xl"
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+            >
+              <option value="">Pilih jenis kelamin</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+            </select>
+          </div>
+
           <div className="mb-4">
             <label htmlFor="email" className="block text-xl font-bold mb-2">Alamat email</label>
             <input
@@ -102,6 +120,7 @@ export default function RegisterPage() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+
           <div className="mb-6">
             <label htmlFor="password" className="block text-xl font-bold mb-2">Kata sandi</label>
             <input
@@ -112,6 +131,7 @@ export default function RegisterPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
           <button
             onClick={handleRegister}
             className="bg-blue-500 cursor-pointer text-white px-6 py-2 rounded-xl hover:bg-blue-600 transition"

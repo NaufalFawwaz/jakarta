@@ -11,6 +11,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { news } from "@/utils/data/news";
 import { useRouter } from "next/router";
 
+// Custom Dropdown reusable
 const CustomDropdown = ({ selected, onChange, options }) => {
   const [open, setOpen] = useState(false);
 
@@ -43,6 +44,7 @@ const CustomDropdown = ({ selected, onChange, options }) => {
   );
 };
 
+// Konfirmasi untuk simpan nama
 const ConfirmationModal = ({ onConfirm, onCancel }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-b bg-opacity-40 z-50">
@@ -74,7 +76,10 @@ const Mypage = () => {
     name: "",
     location: "",
     birthdate: "",
+    gender: "",
+    placement: "",
   });
+
   const [loading, setLoading] = useState(true);
   const [selectedBand, setSelectedBand] = useState("");
   const [bandOptions, setBandOptions] = useState([]);
@@ -145,6 +150,21 @@ const Mypage = () => {
     }
   };
 
+  const handlePlacementChange = async (value) => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        placement: value,
+      });
+      setUserData((prev) => ({ ...prev, placement: value }));
+    } catch (error) {
+      console.error("Gagal memperbarui penempatan:", error);
+    }
+  };
+
   useEffect(() => {
     fetchBandOptions();
   }, []);
@@ -173,6 +193,8 @@ const Mypage = () => {
               name: data.name || "",
               location: data.location || "",
               birthdate: formattedDate || "",
+              gender: data.gender || "",
+              placement: data.placement || "",
             });
 
             setNameInput(data.name || "");
@@ -244,7 +266,7 @@ const Mypage = () => {
             <img
               src={bandDetails.foto || "https://placehold.co/400"}
               alt={`Logo ${bandDetails.nama || "Logo"}`}
-              className="w-32 h-32 object-contain border-2 border-gray-300 mb-2"
+              className="w-42 h-42 object-contain border-2 border-gray-300 mb-2"
             />
             Tertarik pada:&nbsp;
             <CustomDropdown
@@ -253,6 +275,7 @@ const Mypage = () => {
               options={bandOptions}
             />
           </div>
+
           <div className="flex-1">
             <div className="mb-4">
               <label className="block text-xl font-semibold mb-1">Nama:</label>
@@ -288,7 +311,7 @@ const Mypage = () => {
                 )}
               </div>
             </div>
-
+            
             <div className="mb-4">
               <label className="block text-xl font-semibold mb-1">Lokasi:</label>
               <input
@@ -299,7 +322,7 @@ const Mypage = () => {
               />
             </div>
 
-            <div>
+            <div className="mb-4">
               <label className="block text-xl font-semibold mb-1">Tanggal Lahir:</label>
               <input
                 type="text"
@@ -308,8 +331,27 @@ const Mypage = () => {
                 readOnly
               />
             </div>
-          </div>
+            
+            <div className="mb-4">
+              <label className="block text-xl font-semibold mb-1">Jenis Kelamin:</label>
+              <input
+                type="text"
+                value={userData.gender}
+                className="border px-3 py-2 rounded text-base w-full"
+                readOnly
+              />
+            </div>
 
+            <div className="mb-4">
+              <label className="block text-xl font-semibold mb-1">Penempatan Wilayah:</label>
+              <CustomDropdown
+                selected={userData.placement || "Pilih Wilayah"}
+                onChange={handlePlacementChange}
+                options={[{ id: "Jabodetabek", nama: "Jabodetabek" }]}
+              />
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
