@@ -11,7 +11,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { news } from "@/utils/data/news";
 import { useRouter } from "next/router";
 
-// Custom Dropdown reusable
 const CustomDropdown = ({ selected, onChange, options }) => {
   const [open, setOpen] = useState(false);
 
@@ -44,7 +43,6 @@ const CustomDropdown = ({ selected, onChange, options }) => {
   );
 };
 
-// Konfirmasi untuk simpan nama
 const ConfirmationModal = ({ onConfirm, onCancel }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-b bg-opacity-40 z-50">
@@ -343,7 +341,7 @@ const Mypage = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-xl font-semibold mb-1">Penempatan Wilayah:</label>
+              <label className="block text-xl font-semibold mb-1">Lokasi yang diinginkan:</label>
               <CustomDropdown
                 selected={userData.placement || "Pilih Wilayah"}
                 onChange={handlePlacementChange}
