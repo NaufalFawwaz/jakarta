@@ -345,7 +345,14 @@ const Mypage = () => {
               <CustomDropdown
                 selected={userData.placement || "Pilih Wilayah"}
                 onChange={handlePlacementChange}
-                options={[{ id: "Jabodetabek", nama: "Jabodetabek" }]}
+                options={[
+                  { id: "Jabodetabek", nama: "Jabodetabek" }, 
+                  { id: "Jakarta", nama: "Jakarta" }, 
+                  { id: "Depok", nama: "Depok" },
+                  { id: "Bogor", nama: "Bogor" },
+                  { id: "Bekasi", nama: "Bekasi" },
+                  { id: "Bandung", nama: "Bandung" }
+                ]}
               />
             </div>
 
